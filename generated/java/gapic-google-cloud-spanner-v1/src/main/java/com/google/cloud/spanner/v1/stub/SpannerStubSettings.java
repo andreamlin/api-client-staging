@@ -55,6 +55,9 @@ import com.google.spanner.v1.GetSessionRequest;
 import com.google.spanner.v1.ListSessionsRequest;
 import com.google.spanner.v1.ListSessionsResponse;
 import com.google.spanner.v1.PartialResultSet;
+import com.google.spanner.v1.PartitionQueryRequest;
+import com.google.spanner.v1.PartitionReadRequest;
+import com.google.spanner.v1.PartitionResponse;
 import com.google.spanner.v1.ReadRequest;
 import com.google.spanner.v1.ResultSet;
 import com.google.spanner.v1.RollbackRequest;
@@ -85,7 +88,7 @@ import org.threeten.bp.Duration;
  * <code>
  * SpannerStubSettings.Builder spannerSettingsBuilder =
  *     SpannerStubSettings.newBuilder();
- * spannerSettingsBuilder.createSessionSettings().getRetrySettingsBuilder()
+ * spannerSettingsBuilder.createSessionSettings().getRetrySettings().toBuilder()
  *     .setTotalTimeout(Duration.ofSeconds(30));
  * SpannerStubSettings spannerSettings = spannerSettingsBuilder.build();
  * </code>
@@ -98,6 +101,7 @@ public class SpannerStubSettings extends StubSettings<SpannerStubSettings> {
   private static final ImmutableList<String> DEFAULT_SERVICE_SCOPES =
       ImmutableList.<String>builder()
           .add("https://www.googleapis.com/auth/cloud-platform")
+          .add("https://www.googleapis.com/auth/spanner.admin")
           .add("https://www.googleapis.com/auth/spanner.data")
           .build();
 
@@ -115,6 +119,8 @@ public class SpannerStubSettings extends StubSettings<SpannerStubSettings> {
   private final UnaryCallSettings<BeginTransactionRequest, Transaction> beginTransactionSettings;
   private final UnaryCallSettings<CommitRequest, CommitResponse> commitSettings;
   private final UnaryCallSettings<RollbackRequest, Empty> rollbackSettings;
+  private final UnaryCallSettings<PartitionQueryRequest, PartitionResponse> partitionQuerySettings;
+  private final UnaryCallSettings<PartitionReadRequest, PartitionResponse> partitionReadSettings;
 
   /** Returns the object with the settings used for calls to createSession. */
   public UnaryCallSettings<CreateSessionRequest, Session> createSessionSettings() {
@@ -171,6 +177,16 @@ public class SpannerStubSettings extends StubSettings<SpannerStubSettings> {
   /** Returns the object with the settings used for calls to rollback. */
   public UnaryCallSettings<RollbackRequest, Empty> rollbackSettings() {
     return rollbackSettings;
+  }
+
+  /** Returns the object with the settings used for calls to partitionQuery. */
+  public UnaryCallSettings<PartitionQueryRequest, PartitionResponse> partitionQuerySettings() {
+    return partitionQuerySettings;
+  }
+
+  /** Returns the object with the settings used for calls to partitionRead. */
+  public UnaryCallSettings<PartitionReadRequest, PartitionResponse> partitionReadSettings() {
+    return partitionReadSettings;
   }
 
   @BetaApi("A restructuring of stub classes is planned, so this may break in the future")
@@ -251,6 +267,8 @@ public class SpannerStubSettings extends StubSettings<SpannerStubSettings> {
     beginTransactionSettings = settingsBuilder.beginTransactionSettings().build();
     commitSettings = settingsBuilder.commitSettings().build();
     rollbackSettings = settingsBuilder.rollbackSettings().build();
+    partitionQuerySettings = settingsBuilder.partitionQuerySettings().build();
+    partitionReadSettings = settingsBuilder.partitionReadSettings().build();
   }
 
   private static final PagedListDescriptor<ListSessionsRequest, ListSessionsResponse, Session>
@@ -324,6 +342,10 @@ public class SpannerStubSettings extends StubSettings<SpannerStubSettings> {
         beginTransactionSettings;
     private final UnaryCallSettings.Builder<CommitRequest, CommitResponse> commitSettings;
     private final UnaryCallSettings.Builder<RollbackRequest, Empty> rollbackSettings;
+    private final UnaryCallSettings.Builder<PartitionQueryRequest, PartitionResponse>
+        partitionQuerySettings;
+    private final UnaryCallSettings.Builder<PartitionReadRequest, PartitionResponse>
+        partitionReadSettings;
 
     private static final ImmutableMap<String, ImmutableSet<StatusCode.Code>>
         RETRYABLE_CODE_DEFINITIONS;
@@ -402,6 +424,10 @@ public class SpannerStubSettings extends StubSettings<SpannerStubSettings> {
 
       rollbackSettings = UnaryCallSettings.newUnaryCallSettingsBuilder();
 
+      partitionQuerySettings = UnaryCallSettings.newUnaryCallSettingsBuilder();
+
+      partitionReadSettings = UnaryCallSettings.newUnaryCallSettingsBuilder();
+
       unaryMethodSettingsBuilders =
           ImmutableList.<UnaryCallSettings.Builder<?, ?>>of(
               createSessionSettings,
@@ -412,7 +438,9 @@ public class SpannerStubSettings extends StubSettings<SpannerStubSettings> {
               readSettings,
               beginTransactionSettings,
               commitSettings,
-              rollbackSettings);
+              rollbackSettings,
+              partitionQuerySettings,
+              partitionReadSettings);
 
       initDefaults(this);
     }
@@ -473,6 +501,16 @@ public class SpannerStubSettings extends StubSettings<SpannerStubSettings> {
           .setRetryableCodes(RETRYABLE_CODE_DEFINITIONS.get("idempotent"))
           .setRetrySettings(RETRY_PARAM_DEFINITIONS.get("default"));
 
+      builder
+          .partitionQuerySettings()
+          .setRetryableCodes(RETRYABLE_CODE_DEFINITIONS.get("idempotent"))
+          .setRetrySettings(RETRY_PARAM_DEFINITIONS.get("default"));
+
+      builder
+          .partitionReadSettings()
+          .setRetryableCodes(RETRYABLE_CODE_DEFINITIONS.get("idempotent"))
+          .setRetrySettings(RETRY_PARAM_DEFINITIONS.get("default"));
+
       return builder;
     }
 
@@ -490,6 +528,8 @@ public class SpannerStubSettings extends StubSettings<SpannerStubSettings> {
       beginTransactionSettings = settings.beginTransactionSettings.toBuilder();
       commitSettings = settings.commitSettings.toBuilder();
       rollbackSettings = settings.rollbackSettings.toBuilder();
+      partitionQuerySettings = settings.partitionQuerySettings.toBuilder();
+      partitionReadSettings = settings.partitionReadSettings.toBuilder();
 
       unaryMethodSettingsBuilders =
           ImmutableList.<UnaryCallSettings.Builder<?, ?>>of(
@@ -501,7 +541,9 @@ public class SpannerStubSettings extends StubSettings<SpannerStubSettings> {
               readSettings,
               beginTransactionSettings,
               commitSettings,
-              rollbackSettings);
+              rollbackSettings,
+              partitionQuerySettings,
+              partitionReadSettings);
     }
 
     /**
@@ -577,6 +619,18 @@ public class SpannerStubSettings extends StubSettings<SpannerStubSettings> {
     /** Returns the builder for the settings used for calls to rollback. */
     public UnaryCallSettings.Builder<RollbackRequest, Empty> rollbackSettings() {
       return rollbackSettings;
+    }
+
+    /** Returns the builder for the settings used for calls to partitionQuery. */
+    public UnaryCallSettings.Builder<PartitionQueryRequest, PartitionResponse>
+        partitionQuerySettings() {
+      return partitionQuerySettings;
+    }
+
+    /** Returns the builder for the settings used for calls to partitionRead. */
+    public UnaryCallSettings.Builder<PartitionReadRequest, PartitionResponse>
+        partitionReadSettings() {
+      return partitionReadSettings;
     }
 
     @Override

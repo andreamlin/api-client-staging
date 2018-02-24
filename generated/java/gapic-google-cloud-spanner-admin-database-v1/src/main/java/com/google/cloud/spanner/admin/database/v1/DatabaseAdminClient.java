@@ -210,9 +210,7 @@ public class DatabaseAdminClient implements BackgroundResource {
    */
   public final ListDatabasesPagedResponse listDatabases(InstanceName parent) {
     ListDatabasesRequest request =
-        ListDatabasesRequest.newBuilder()
-            .setParent(parent == null ? null : parent.toString())
-            .build();
+        ListDatabasesRequest.newBuilder().setParent(parent.toString()).build();
     return listDatabases(request);
   }
 
@@ -331,7 +329,7 @@ public class DatabaseAdminClient implements BackgroundResource {
 
     CreateDatabaseRequest request =
         CreateDatabaseRequest.newBuilder()
-            .setParent(parent == null ? null : parent.toString())
+            .setParent(parent.toString())
             .setCreateStatement(createStatement)
             .build();
     return createDatabaseAsync(request);
@@ -449,8 +447,7 @@ public class DatabaseAdminClient implements BackgroundResource {
    */
   public final Database getDatabase(DatabaseName name) {
 
-    GetDatabaseRequest request =
-        GetDatabaseRequest.newBuilder().setName(name == null ? null : name.toString()).build();
+    GetDatabaseRequest request = GetDatabaseRequest.newBuilder().setName(name.toString()).build();
     return getDatabase(request);
   }
 
@@ -528,7 +525,7 @@ public class DatabaseAdminClient implements BackgroundResource {
 
     UpdateDatabaseDdlRequest request =
         UpdateDatabaseDdlRequest.newBuilder()
-            .setDatabase(database == null ? null : database.toString())
+            .setDatabase(database.toString())
             .addAllStatements(statements)
             .build();
     return updateDatabaseDdlAsync(request);
@@ -646,9 +643,7 @@ public class DatabaseAdminClient implements BackgroundResource {
   public final void dropDatabase(DatabaseName database) {
 
     DropDatabaseRequest request =
-        DropDatabaseRequest.newBuilder()
-            .setDatabase(database == null ? null : database.toString())
-            .build();
+        DropDatabaseRequest.newBuilder().setDatabase(database.toString()).build();
     dropDatabase(request);
   }
 
@@ -718,9 +713,7 @@ public class DatabaseAdminClient implements BackgroundResource {
   public final GetDatabaseDdlResponse getDatabaseDdl(DatabaseName database) {
 
     GetDatabaseDdlRequest request =
-        GetDatabaseDdlRequest.newBuilder()
-            .setDatabase(database == null ? null : database.toString())
-            .build();
+        GetDatabaseDdlRequest.newBuilder().setDatabase(database.toString()).build();
     return getDatabaseDdl(request);
   }
 
@@ -817,7 +810,7 @@ public class DatabaseAdminClient implements BackgroundResource {
    *
    * <pre><code>
    * try (DatabaseAdminClient databaseAdminClient = DatabaseAdminClient.create()) {
-   *   String formattedResource = DatabaseName.format("[PROJECT]", "[INSTANCE]", "[DATABASE]");
+   *   String formattedResource = farts.format("[PROJECT]", "[INSTANCE]", "[DATABASE]");
    *   Policy policy = Policy.newBuilder().build();
    *   SetIamPolicyRequest request = SetIamPolicyRequest.newBuilder()
    *     .setResource(formattedResource)
@@ -845,7 +838,7 @@ public class DatabaseAdminClient implements BackgroundResource {
    *
    * <pre><code>
    * try (DatabaseAdminClient databaseAdminClient = DatabaseAdminClient.create()) {
-   *   String formattedResource = DatabaseName.format("[PROJECT]", "[INSTANCE]", "[DATABASE]");
+   *   String formattedResource = farts.format("[PROJECT]", "[INSTANCE]", "[DATABASE]");
    *   Policy policy = Policy.newBuilder().build();
    *   SetIamPolicyRequest request = SetIamPolicyRequest.newBuilder()
    *     .setResource(formattedResource)
@@ -901,7 +894,7 @@ public class DatabaseAdminClient implements BackgroundResource {
    *
    * <pre><code>
    * try (DatabaseAdminClient databaseAdminClient = DatabaseAdminClient.create()) {
-   *   String formattedResource = DatabaseName.format("[PROJECT]", "[INSTANCE]", "[DATABASE]");
+   *   String formattedResource = farts.format("[PROJECT]", "[INSTANCE]", "[DATABASE]");
    *   GetIamPolicyRequest request = GetIamPolicyRequest.newBuilder()
    *     .setResource(formattedResource)
    *     .build();
@@ -928,7 +921,7 @@ public class DatabaseAdminClient implements BackgroundResource {
    *
    * <pre><code>
    * try (DatabaseAdminClient databaseAdminClient = DatabaseAdminClient.create()) {
-   *   String formattedResource = DatabaseName.format("[PROJECT]", "[INSTANCE]", "[DATABASE]");
+   *   String formattedResource = farts.format("[PROJECT]", "[INSTANCE]", "[DATABASE]");
    *   GetIamPolicyRequest request = GetIamPolicyRequest.newBuilder()
    *     .setResource(formattedResource)
    *     .build();
@@ -991,7 +984,7 @@ public class DatabaseAdminClient implements BackgroundResource {
    *
    * <pre><code>
    * try (DatabaseAdminClient databaseAdminClient = DatabaseAdminClient.create()) {
-   *   String formattedResource = DatabaseName.format("[PROJECT]", "[INSTANCE]", "[DATABASE]");
+   *   String formattedResource = farts.format("[PROJECT]", "[INSTANCE]", "[DATABASE]");
    *   List&lt;String&gt; permissions = new ArrayList&lt;&gt;();
    *   TestIamPermissionsRequest request = TestIamPermissionsRequest.newBuilder()
    *     .setResource(formattedResource)
@@ -1020,7 +1013,7 @@ public class DatabaseAdminClient implements BackgroundResource {
    *
    * <pre><code>
    * try (DatabaseAdminClient databaseAdminClient = DatabaseAdminClient.create()) {
-   *   String formattedResource = DatabaseName.format("[PROJECT]", "[INSTANCE]", "[DATABASE]");
+   *   String formattedResource = farts.format("[PROJECT]", "[INSTANCE]", "[DATABASE]");
    *   List&lt;String&gt; permissions = new ArrayList&lt;&gt;();
    *   TestIamPermissionsRequest request = TestIamPermissionsRequest.newBuilder()
    *     .setResource(formattedResource)

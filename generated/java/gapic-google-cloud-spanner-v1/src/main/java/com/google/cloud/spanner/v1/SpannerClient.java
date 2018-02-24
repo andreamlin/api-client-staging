@@ -42,6 +42,9 @@ import com.google.spanner.v1.ListSessionsRequest;
 import com.google.spanner.v1.ListSessionsResponse;
 import com.google.spanner.v1.Mutation;
 import com.google.spanner.v1.PartialResultSet;
+import com.google.spanner.v1.PartitionQueryRequest;
+import com.google.spanner.v1.PartitionReadRequest;
+import com.google.spanner.v1.PartitionResponse;
 import com.google.spanner.v1.ReadRequest;
 import com.google.spanner.v1.ResultSet;
 import com.google.spanner.v1.RollbackRequest;
@@ -208,9 +211,7 @@ public class SpannerClient implements BackgroundResource {
   public final Session createSession(DatabaseName database) {
 
     CreateSessionRequest request =
-        CreateSessionRequest.newBuilder()
-            .setDatabase(database == null ? null : database.toString())
-            .build();
+        CreateSessionRequest.newBuilder().setDatabase(database.toString()).build();
     return createSession(request);
   }
 
@@ -306,8 +307,7 @@ public class SpannerClient implements BackgroundResource {
    */
   public final Session getSession(SessionName name) {
 
-    GetSessionRequest request =
-        GetSessionRequest.newBuilder().setName(name == null ? null : name.toString()).build();
+    GetSessionRequest request = GetSessionRequest.newBuilder().setName(name.toString()).build();
     return getSession(request);
   }
 
@@ -389,7 +389,7 @@ public class SpannerClient implements BackgroundResource {
    *
    * <pre><code>
    * try (SpannerClient spannerClient = SpannerClient.create()) {
-   *   String formattedDatabase = DatabaseName.format("[PROJECT]", "[INSTANCE]", "[DATABASE]");
+   *   String formattedDatabase = farts.format("[PROJECT]", "[INSTANCE]", "[DATABASE]");
    *   ListSessionsRequest request = ListSessionsRequest.newBuilder()
    *     .setDatabase(formattedDatabase)
    *     .build();
@@ -414,7 +414,7 @@ public class SpannerClient implements BackgroundResource {
    *
    * <pre><code>
    * try (SpannerClient spannerClient = SpannerClient.create()) {
-   *   String formattedDatabase = DatabaseName.format("[PROJECT]", "[INSTANCE]", "[DATABASE]");
+   *   String formattedDatabase = farts.format("[PROJECT]", "[INSTANCE]", "[DATABASE]");
    *   ListSessionsRequest request = ListSessionsRequest.newBuilder()
    *     .setDatabase(formattedDatabase)
    *     .build();
@@ -439,7 +439,7 @@ public class SpannerClient implements BackgroundResource {
    *
    * <pre><code>
    * try (SpannerClient spannerClient = SpannerClient.create()) {
-   *   String formattedDatabase = DatabaseName.format("[PROJECT]", "[INSTANCE]", "[DATABASE]");
+   *   String formattedDatabase = farts.format("[PROJECT]", "[INSTANCE]", "[DATABASE]");
    *   ListSessionsRequest request = ListSessionsRequest.newBuilder()
    *     .setDatabase(formattedDatabase)
    *     .build();
@@ -481,7 +481,7 @@ public class SpannerClient implements BackgroundResource {
   public final void deleteSession(SessionName name) {
 
     DeleteSessionRequest request =
-        DeleteSessionRequest.newBuilder().setName(name == null ? null : name.toString()).build();
+        DeleteSessionRequest.newBuilder().setName(name.toString()).build();
     deleteSession(request);
   }
 
@@ -791,7 +791,7 @@ public class SpannerClient implements BackgroundResource {
 
     BeginTransactionRequest request =
         BeginTransactionRequest.newBuilder()
-            .setSession(session == null ? null : session.toString())
+            .setSession(session.toString())
             .setOptions(options)
             .build();
     return beginTransaction(request);
@@ -882,7 +882,7 @@ public class SpannerClient implements BackgroundResource {
 
     CommitRequest request =
         CommitRequest.newBuilder()
-            .setSession(session == null ? null : session.toString())
+            .setSession(session.toString())
             .setTransactionId(transactionId)
             .addAllMutations(mutations)
             .build();
@@ -927,7 +927,7 @@ public class SpannerClient implements BackgroundResource {
 
     CommitRequest request =
         CommitRequest.newBuilder()
-            .setSession(session == null ? null : session.toString())
+            .setSession(session.toString())
             .setSingleUseTransaction(singleUseTransaction)
             .addAllMutations(mutations)
             .build();
@@ -1023,7 +1023,7 @@ public class SpannerClient implements BackgroundResource {
 
     RollbackRequest request =
         RollbackRequest.newBuilder()
-            .setSession(session == null ? null : session.toString())
+            .setSession(session.toString())
             .setTransactionId(transactionId)
             .build();
     rollback(request);
@@ -1088,6 +1088,132 @@ public class SpannerClient implements BackgroundResource {
    */
   public final UnaryCallable<RollbackRequest, Empty> rollbackCallable() {
     return stub.rollbackCallable();
+  }
+
+  // AUTO-GENERATED DOCUMENTATION AND METHOD
+  /**
+   * Creates a set of partition tokens that can be used to execute a query operation in parallel.
+   * Each of the returned partition tokens can be used by
+   * [ExecuteStreamingSql][google.spanner.v1.Spanner.ExecuteStreamingSql] to specify a subset of the
+   * query result to read. The same session and read-only transaction must be used by the
+   * PartitionQueryRequest used to create the partition tokens and the ExecuteSqlRequests that use
+   * the partition tokens. Partition tokens become invalid when the session used to create them is
+   * deleted or begins a new transaction.
+   *
+   * <p>Sample code:
+   *
+   * <pre><code>
+   * try (SpannerClient spannerClient = SpannerClient.create()) {
+   *   String formattedSession = farts.format("[PROJECT]", "[INSTANCE]", "[DATABASE]", "[SESSION]");
+   *   String sql = "";
+   *   PartitionQueryRequest request = PartitionQueryRequest.newBuilder()
+   *     .setSession(formattedSession)
+   *     .setSql(sql)
+   *     .build();
+   *   PartitionResponse response = spannerClient.partitionQuery(request);
+   * }
+   * </code></pre>
+   *
+   * @param request The request object containing all of the parameters for the API call.
+   * @throws com.google.api.gax.rpc.ApiException if the remote call fails
+   */
+  public final PartitionResponse partitionQuery(PartitionQueryRequest request) {
+    return partitionQueryCallable().call(request);
+  }
+
+  // AUTO-GENERATED DOCUMENTATION AND METHOD
+  /**
+   * Creates a set of partition tokens that can be used to execute a query operation in parallel.
+   * Each of the returned partition tokens can be used by
+   * [ExecuteStreamingSql][google.spanner.v1.Spanner.ExecuteStreamingSql] to specify a subset of the
+   * query result to read. The same session and read-only transaction must be used by the
+   * PartitionQueryRequest used to create the partition tokens and the ExecuteSqlRequests that use
+   * the partition tokens. Partition tokens become invalid when the session used to create them is
+   * deleted or begins a new transaction.
+   *
+   * <p>Sample code:
+   *
+   * <pre><code>
+   * try (SpannerClient spannerClient = SpannerClient.create()) {
+   *   String formattedSession = farts.format("[PROJECT]", "[INSTANCE]", "[DATABASE]", "[SESSION]");
+   *   String sql = "";
+   *   PartitionQueryRequest request = PartitionQueryRequest.newBuilder()
+   *     .setSession(formattedSession)
+   *     .setSql(sql)
+   *     .build();
+   *   ApiFuture&lt;PartitionResponse&gt; future = spannerClient.partitionQueryCallable().futureCall(request);
+   *   // Do something
+   *   PartitionResponse response = future.get();
+   * }
+   * </code></pre>
+   */
+  public final UnaryCallable<PartitionQueryRequest, PartitionResponse> partitionQueryCallable() {
+    return stub.partitionQueryCallable();
+  }
+
+  // AUTO-GENERATED DOCUMENTATION AND METHOD
+  /**
+   * Creates a set of partition tokens that can be used to execute a read operation in parallel.
+   * Each of the returned partition tokens can be used by
+   * [StreamingRead][google.spanner.v1.Spanner.StreamingRead] to specify a subset of the read result
+   * to read. The same session and read-only transaction must be used by the PartitionReadRequest
+   * used to create the partition tokens and the ReadRequests that use the partition tokens.
+   * Partition tokens become invalid when the session used to create them is deleted or begins a new
+   * transaction.
+   *
+   * <p>Sample code:
+   *
+   * <pre><code>
+   * try (SpannerClient spannerClient = SpannerClient.create()) {
+   *   String formattedSession = farts.format("[PROJECT]", "[INSTANCE]", "[DATABASE]", "[SESSION]");
+   *   String table = "";
+   *   KeySet keySet = KeySet.newBuilder().build();
+   *   PartitionReadRequest request = PartitionReadRequest.newBuilder()
+   *     .setSession(formattedSession)
+   *     .setTable(table)
+   *     .setKeySet(keySet)
+   *     .build();
+   *   PartitionResponse response = spannerClient.partitionRead(request);
+   * }
+   * </code></pre>
+   *
+   * @param request The request object containing all of the parameters for the API call.
+   * @throws com.google.api.gax.rpc.ApiException if the remote call fails
+   */
+  public final PartitionResponse partitionRead(PartitionReadRequest request) {
+    return partitionReadCallable().call(request);
+  }
+
+  // AUTO-GENERATED DOCUMENTATION AND METHOD
+  /**
+   * Creates a set of partition tokens that can be used to execute a read operation in parallel.
+   * Each of the returned partition tokens can be used by
+   * [StreamingRead][google.spanner.v1.Spanner.StreamingRead] to specify a subset of the read result
+   * to read. The same session and read-only transaction must be used by the PartitionReadRequest
+   * used to create the partition tokens and the ReadRequests that use the partition tokens.
+   * Partition tokens become invalid when the session used to create them is deleted or begins a new
+   * transaction.
+   *
+   * <p>Sample code:
+   *
+   * <pre><code>
+   * try (SpannerClient spannerClient = SpannerClient.create()) {
+   *   String formattedSession = farts.format("[PROJECT]", "[INSTANCE]", "[DATABASE]", "[SESSION]");
+   *   String table = "";
+   *   KeySet keySet = KeySet.newBuilder().build();
+   *   PartitionReadRequest request = PartitionReadRequest.newBuilder()
+   *     .setSession(formattedSession)
+   *     .setTable(table)
+   *     .setKeySet(keySet)
+   *     .build();
+   *   ApiFuture&lt;PartitionResponse&gt; future = spannerClient.partitionReadCallable().futureCall(request);
+   *   // Do something
+   *   PartitionResponse response = future.get();
+   * }
+   * </code></pre>
+   */
+  public final UnaryCallable<PartitionReadRequest, PartitionResponse> partitionReadCallable() {
+    return stub.partitionReadCallable();
   }
 
   @Override
